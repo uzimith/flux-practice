@@ -1,0 +1,12 @@
+{
+  "jspm": {
+    "directories": {
+      "baseURL": "js",
+      "lib": "js"
+    },
+    "dependencies": {
+      "jsx": "^0.1.1",
+      "react": "^0.12.2"
+    }
+  }
+}
