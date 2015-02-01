@@ -1,12 +1,34 @@
 {
-  "jspm": {
-    "directories": {
-      "baseURL": "js",
-      "lib": "js"
-    },
-    "dependencies": {
-      "jsx": "^0.1.1",
-      "react": "^0.12.2"
-    }
+  "name": "todo",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "",
+  "main": "js/app.jsx",
+  "dependencies": {
+    "flux": "^2.0.1",
+    "keymirror": "~0.1.0",
+    "object-assign": "^1.0.0",
+    "react": "^0.12.0"
+  },
+  "devDependencies": {
+    "6to5ify": "^4.0.0",
+    "browserify": "^6.2.0",
+    "envify": "^3.0.0",
+    "reactify": "^0.15.2",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1"
+  },
+  "scripts": {
+    "start": "watchify -o js/bundle.js -v -d .",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > js/bundle.min.js",
+    "test": "jest"
+  },
+  "author": "Bill Fisher",
+  "browserify": {
+    "transform": [
+      "reactify",
+      "6to5ify",
+      "envify"
+    ]
   }
 }
