@@ -1,1 +1,0 @@
-module.exports = require("npm:react-tools@0.12.2/main");

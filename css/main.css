@@ -7563,3 +7563,10 @@ th.hide-for-touch {
   /* line 404, ../bower_components/foundation/scss/foundation/components/_visibility.scss */
   th.show-for-print {
     display: table-cell !important; } }
+/* line 3, ../sass/main.sass */
+todoapp, todo {
+  display: block; }
+
+/* line 6, ../sass/main.sass */
+.row {
+  max-width: 80rem; }
