@@ -3,16 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "repository": "",
-  "main": "js/app.js",
+  "main": "js/app.coffee",
   "dependencies": {
     "6to5": "^3.3.7",
+    "coffee-script": "^1.9.0",
     "coffeeify": "^1.0.0",
-    "flux": "^2.0.1",
     "jade": "^1.9.1",
-    "keymirror": "~0.1.0",
-    "object-assign": "^1.0.0",
-    "react": "^0.12.0",
-    "riot": "^2.0.7"
+    "riot": "^2.0.7",
+    "riotify": "0.0.7"
   },
   "devDependencies": {
     "6to5ify": "^4.0.0",
@@ -27,7 +25,7 @@
     "build": "NODE_ENV=production browserify . | uglifyjs -cm > js/bundle.min.js",
     "test": "jest"
   },
-  "author": "Bill Fisher",
+  "author": "",
   "browserify": {
     "transform": [
       [
@@ -41,11 +39,5 @@
       "6to5ify",
       "coffeeify"
     ]
-  },
-  "jspm": {
-    "directories": {
-      "baseURL": "js",
-      "lib": "js"
-    }
   }
 }

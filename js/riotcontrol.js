@@ -1,4 +1,3 @@
-
 var RiotControl = {
   _stores: [],
   addStore(store) {
