@@ -8,9 +8,12 @@
     "6to5": "^3.3.7",
     "coffee-script": "^1.9.0",
     "coffeeify": "^1.0.0",
+    "gulp": "^3.8.10",
+    "gulp-util": "^3.0.3",
     "jade": "^1.9.1",
     "riot": "^2.0.7",
-    "riotify": "0.0.7"
+    "riotify": "0.0.7",
+    "vinyl-source-stream": "^1.0.0"
   },
   "devDependencies": {
     "6to5ify": "^4.0.0",
