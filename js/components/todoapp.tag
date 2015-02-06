@@ -10,3 +10,4 @@ todoapp
               todo-count
   .container
     todo.col-md-6.col-md-offset-3(title="Demo")
+    todo-remove

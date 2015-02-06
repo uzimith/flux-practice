@@ -8,6 +8,7 @@ normalizedPath = require("path").join(__dirname, "components")
 require('./components/todoapp.tag')
 require('./components/todo.tag')
 require('./components/todo-count.tag')
+require('./components/todo-remove.tag')
 
 RiotControl.addStore(new TodoStore)
 riot.mount('todoapp')

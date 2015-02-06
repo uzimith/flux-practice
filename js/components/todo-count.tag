@@ -1,5 +1,6 @@
 todo-count
   span.badge { count }
+  span  items left
   script.
     RiotControl = require('../riotcontrol')
 

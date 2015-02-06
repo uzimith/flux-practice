@@ -3,17 +3,22 @@ TodoStore = ->
   riot.observable(this)
 
   @todos = [
-    { title: 'Task 1', done: false},
-    { title: 'Task 2', done: false},
+    { id: 1, title: 'Task 1', done: false},
+    { id: 2, title: 'Task 2', done: true},
   ]
 
   @on 'todo_add', (newTodo) =>
     @todos.push(newTodo)
     @trigger 'todos_changed', @todos
 
-  @on 'todo_remove', =>
-    @todos.pop()
+  @on 'todo_remove', (id)=>
+    delete @todos[id]
     @trigger 'todos_changed', @todos
+
+  @on 'todo_removeCompleted', =>
+    for todo,id in @todos
+      if todo.done
+        delete @todos[id]
 
   @on 'todo_init', =>
     @trigger 'todos_changed', @todos
