@@ -1,4 +1,4 @@
-todoapp
+app
   header.navbar.navbar-default.navbar-static-top
     .container
       .navbar-header
@@ -10,4 +10,3 @@ todoapp
               todo-count
   .container
     todo.col-md-6.col-md-offset-3(title="Demo")
-    todo-remove

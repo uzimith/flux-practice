@@ -1,5 +1,5 @@
 todo-remove
-  button.btn.btn-default(onclick='{ remove }') Clear completed ({ completed })
+  button.btn.btn-default(if='{ completed != 0}' onclick='{ remove }') Clear completed ({ completed })
   script.
     RiotControl = require('../riotcontrol')
 
@@ -8,10 +8,8 @@ todo-remove
     @on 'mount', =>
       RiotControl.trigger 'todo_init'
 
-    RiotControl.on 'todos_changed', (items)=>
-      @items = items
-      console.log(items)
-      @completed = (item for item in items when item.done is true).length
+    RiotControl.on 'todos_changed', (todos)=>
+      @completed = (item for _, item of todos when item.done is true).length
       @update()
 
     @remove = (e) =>

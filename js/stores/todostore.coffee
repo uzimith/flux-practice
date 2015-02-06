@@ -2,23 +2,29 @@ riot = require('riot')
 TodoStore = ->
   riot.observable(this)
 
-  @todos = [
-    { id: 1, title: 'Task 1', done: false},
-    { id: 2, title: 'Task 2', done: true},
-  ]
+  @todos = {}
 
   @on 'todo_add', (newTodo) =>
-    @todos.push(newTodo)
+    console.log(newTodo)
+    id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36)
+    newTodo['id'] = id
+    @todos[id] = newTodo
     @trigger 'todos_changed', @todos
 
   @on 'todo_remove', (id)=>
     delete @todos[id]
     @trigger 'todos_changed', @todos
 
+  @on 'todo_toggle', (id)=>
+    console.log(id)
+    @todos[id].done = !@todos[id].done
+    @trigger 'todos_changed', @todos
+
   @on 'todo_removeCompleted', =>
-    for todo,id in @todos
-      if todo.done
-        delete @todos[id]
+    for id, task of @todos
+      if task.done
+        delete @todos[task.id]
+    @trigger 'todos_changed', @todos
 
   @on 'todo_init', =>
     @trigger 'todos_changed', @todos
