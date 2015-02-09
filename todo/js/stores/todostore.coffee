@@ -5,7 +5,6 @@ TodoStore = ->
   @todos = {}
 
   @on 'todo_add', (newTodo) =>
-    console.log(newTodo)
     id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36)
     newTodo['id'] = id
     @todos[id] = newTodo
@@ -16,7 +15,6 @@ TodoStore = ->
     @trigger 'todos_changed', @todos
 
   @on 'todo_toggle', (id)=>
-    console.log(id)
     @todos[id].done = !@todos[id].done
     @trigger 'todos_changed', @todos
 
@@ -30,4 +28,3 @@ TodoStore = ->
     @trigger 'todos_changed', @todos
 
 module.exports = TodoStore
-window.TodoStore = TodoStore

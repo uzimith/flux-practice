@@ -2,6 +2,7 @@ todo-remove
   button.pull-right.btn.btn-danger.btn-xs(if='{ completed != 0}' onclick='{ remove }') Clear completed ({ completed })
   script.
     RiotControl = require('../riotcontrol')
+    TodoAction = require('../actions/TodoAction.coffee')
 
     @completed = 0
 
@@ -13,4 +14,4 @@ todo-remove
       @update()
 
     @remove = (e) =>
-      RiotControl.trigger('todo_removeCompleted')
+      TodoAction.destroyCompleted()

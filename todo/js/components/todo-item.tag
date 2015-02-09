@@ -7,14 +7,16 @@ todo-item
       span.glyphicon.glyphicon-remove
   script.
     RiotControl = require('../riotcontrol')
+    TodoAction = require('../actions/TodoAction.coffee')
+
     @isHover = false
 
     @toggle = (e) =>
-      RiotControl.trigger('todo_toggle', opts.task.id)
+      TodoAction.toggle(opts.task)
       true
 
     @remove = (e) =>
-      RiotControl.trigger('todo_remove', opts.task.id)
+      TodoAction.destroy(opts.task)
 
     @hover = (e) =>
       @isHover = true

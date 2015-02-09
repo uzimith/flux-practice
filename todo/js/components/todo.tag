@@ -12,6 +12,8 @@ todo
     todo-remove
   script.
     RiotControl = require('../riotcontrol')
+    TodoAction = require('../actions/TodoAction.coffee')
+
     @disabled =  true
     @todos = {}
 
@@ -27,5 +29,5 @@ todo
 
     @add = (e) =>
       if (@text)
-        RiotControl.trigger('todo_add', {title: @text, done: false})
+        TodoAction.add(@text)
         @text = @input.value = ''

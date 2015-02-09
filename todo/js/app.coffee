@@ -1,9 +1,6 @@
 riot = require('riot')
-TodoStore = require('./stores/todostore.coffee')
-RiotControl = require('./riotcontrol')
-
-
-normalizedPath = require("path").join(__dirname, "components")
+TodoStore = require('./stores/TodoStore.coffee')
+RiotControl = require('./riotcontrol.js')
 
 require('./components/app.tag')
 require('./components/todo.tag')
