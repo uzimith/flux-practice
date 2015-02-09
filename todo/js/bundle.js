@@ -18,7 +18,7 @@ require('./components/todo-count.tag');
 
 require('./components/todo-remove.tag');
 
-require('./components/task.tag');
+require('./components/todo-item.tag');
 
 RiotControl.addStore(new TodoStore);
 
@@ -27,34 +27,13 @@ riot.mount('*');
 
 
 }).call(this,"/js")
-},{"./components/app.tag":2,"./components/task.tag":3,"./components/todo-count.tag":4,"./components/todo-remove.tag":5,"./components/todo.tag":6,"./riotcontrol":7,"./stores/todostore.coffee":8,"path":9,"riot":11}],2:[function(require,module,exports){
+},{"./components/app.tag":2,"./components/todo-count.tag":3,"./components/todo-item.tag":4,"./components/todo-remove.tag":5,"./components/todo.tag":6,"./riotcontrol":7,"./stores/todostore.coffee":8,"path":9,"riot":11}],2:[function(require,module,exports){
 var riot = require('riot');
 
 riot.tag('app', '<header class="navbar navbar-default navbar-static-top"><div class="container"><div class="navbar-header"><div class="navbar-brand">Todo</div></div><nav class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><a><todo-count></todo-count></a></li></ul></nav></div></header><div class="container"><todo title="Demo" class="col-md-6 col-md-offset-3"></todo></div>', function(opts) {
 
 });
 },{"riot":11}],3:[function(require,module,exports){
-var riot = require('riot');
-
-riot.tag('task', '<div class="clearfix"><label class="{ completed: opts.task.done }"></label><input type="checkbox" onclick="{ toggle }" __checked="{ opts.task.done }"><span>{ opts.task.title }</span><button onclick="{ remove }" class="pull-right btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button></div>', function(opts) {var RiotControl;
-
-RiotControl = require('../riotcontrol');
-
-this.toggle = (function(_this) {
-  return function(e) {
-    RiotControl.trigger('todo_toggle', opts.task.id);
-    return true;
-  };
-})(this);
-
-this.remove = (function(_this) {
-  return function(e) {
-    return RiotControl.trigger('todo_remove', opts.task.id);
-  };
-})(this);
-
-});
-},{"../riotcontrol":7,"riot":11}],4:[function(require,module,exports){
 var riot = require('riot');
 
 riot.tag('todo-count', '<span class="badge">{ count }</span><span> items left</span>', function(opts) {var RiotControl;
@@ -86,6 +65,41 @@ RiotControl.on('todos_changed', (function(_this) {
     return _this.update();
   };
 })(this));
+
+});
+},{"../riotcontrol":7,"riot":11}],4:[function(require,module,exports){
+var riot = require('riot');
+
+riot.tag('todo-item', '<div onmouseover="{ hover }" onmouseout="{ unhover }" class="clearfix todo { completed: opts.task.done }"><label><input type="checkbox" onclick="{ toggle }" __checked="{ opts.task.done }"><span> { opts.task.title } </span></label><button show="{isHover}" onclick="{ remove }" class="pull-right btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button></div>', function(opts) {var RiotControl;
+
+RiotControl = require('../riotcontrol');
+
+this.isHover = false;
+
+this.toggle = (function(_this) {
+  return function(e) {
+    RiotControl.trigger('todo_toggle', opts.task.id);
+    return true;
+  };
+})(this);
+
+this.remove = (function(_this) {
+  return function(e) {
+    return RiotControl.trigger('todo_remove', opts.task.id);
+  };
+})(this);
+
+this.hover = (function(_this) {
+  return function(e) {
+    return _this.isHover = true;
+  };
+})(this);
+
+this.unhover = (function(_this) {
+  return function(e) {
+    return _this.isHover = false;
+  };
+})(this);
 
 });
 },{"../riotcontrol":7,"riot":11}],5:[function(require,module,exports){
@@ -131,7 +145,7 @@ this.remove = (function(_this) {
 },{"../riotcontrol":7,"riot":11}],6:[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('todo', '<div class="row"><form onsubmit="{ add }" class="form-inline"><div class="form-group"><label for="taskinput">Task</label><input id="taskinput" name="input" onkeyup="{ edit }" class="form-control"></div><button __disabled="{ !text }" class="btn btn-default">Add</button></form></div><ul class="list-group"><li each="{ _, task in todos }" class="list-group-item"><task task="{task}"></task></li></ul><div class="row"><todo-remove></todo-remove></div>', function(opts) {var RiotControl;
+riot.tag('todo', '<div class="row"><form onsubmit="{ add }" class="form-inline"><div class="form-group"><label for="taskinput">Task</label><input id="taskinput" name="input" onkeyup="{ edit }" class="form-control"></div><button __disabled="{ !text }" class="btn btn-default">Add</button></form></div><ul class="list-group"><li each="{ _, task in todos }" class="list-group-item"><todo-item task="{task}"></todo-item></li></ul><div class="row"><todo-remove></todo-remove></div>', function(opts) {var RiotControl;
 
 RiotControl = require('../riotcontrol');
 

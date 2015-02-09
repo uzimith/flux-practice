@@ -9,7 +9,7 @@ require('./components/app.tag')
 require('./components/todo.tag')
 require('./components/todo-count.tag')
 require('./components/todo-remove.tag')
-require('./components/task.tag')
+require('./components/todo-item.tag')
 
 RiotControl.addStore(new TodoStore)
 riot.mount('*')
