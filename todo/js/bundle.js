@@ -91,7 +91,7 @@ RiotControl.on('todos_changed', (function(_this) {
 },{"../riotcontrol":7,"riot":11}],5:[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('todo-remove', '<button if="{ completed != 0}" onclick="{ remove }" class="btn btn-default">Clear completed ({ completed })</button>', function(opts) {var RiotControl;
+riot.tag('todo-remove', '<button if="{ completed != 0}" onclick="{ remove }" class="pull-right btn btn-danger btn-xs">Clear completed ({ completed })</button>', function(opts) {var RiotControl;
 
 RiotControl = require('../riotcontrol');
 

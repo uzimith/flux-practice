@@ -1,5 +1,5 @@
 todo-remove
-  button.btn.btn-default(if='{ completed != 0}' onclick='{ remove }') Clear completed ({ completed })
+  button.pull-right.btn.btn-danger.btn-xs(if='{ completed != 0}' onclick='{ remove }') Clear completed ({ completed })
   script.
     RiotControl = require('../riotcontrol')
 

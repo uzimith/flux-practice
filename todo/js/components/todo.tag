@@ -7,7 +7,7 @@ todo
       button.btn.btn-default(disabled='{ !text }') Add
   ul.list-group
     li.list-group-item(each='{ _, task in todos }')
-      task(task='{task}')
+      todo-item(task='{task}')
   .row
     todo-remove
   script.
