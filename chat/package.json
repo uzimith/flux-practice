@@ -1,0 +1,51 @@
+{
+  "name": "todo",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "",
+  "main": "js/app.coffee",
+  "dependencies": {
+    "6to5": "^3.3.7",
+    "coffee-script": "^1.9.0",
+    "coffeeify": "^1.0.0",
+    "gulp": "^3.8.10",
+    "gulp-sourcemaps": "^1.3.0",
+    "gulp-util": "^3.0.3",
+    "jade": "^1.9.1",
+    "moment": "^2.9.0",
+    "riot": "^2.0.7",
+    "riotify": "0.0.7",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "devDependencies": {
+    "6to5ify": "^4.0.0",
+    "browserify": "^6.2.0",
+    "envify": "^3.0.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.1.0",
+    "reactify": "^0.15.2",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1"
+  },
+  "scripts": {
+    "start": "watchify -o js/bundle.js -v -d .",
+    "build": "NODE_ENV=production browserify . | uglifyjs -cm > js/bundle.min.js",
+    "test": "jest"
+  },
+  "author": "",
+  "browserify": {
+    "transform": [
+      [
+        "riotify",
+        {
+          "compact": true,
+          "type": "coffeescript",
+          "template": "jade"
+        }
+      ],
+      "6to5ify",
+      "coffeeify"
+    ]
+  }
+}

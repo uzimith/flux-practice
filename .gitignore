@@ -15,3 +15,5 @@ Temporary Items
 .apdisk
 npm-debug.log
 js/.bundle.js
+bower_components
+
