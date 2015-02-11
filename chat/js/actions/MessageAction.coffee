@@ -10,7 +10,7 @@ MessageAction =
       date: moment()
       text: text
       isRead: true
+    RiotControl.trigger('message_add', message)
     WebAPIUtils.createMessage(message)
-
 
 module.exports = MessageAction

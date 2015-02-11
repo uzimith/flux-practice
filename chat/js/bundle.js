@@ -55,49 +55,42 @@ module.exports = {
   init: function () {
     localStorage.clear();
     localStorage.setItem("messages", JSON.stringify([{
-      id: 0,
       threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Bill",
       text: "Hey Jing, want to give a Flux talk at ForwardJS?",
       timestamp: Date.now() - 99999
     }, {
-      id: 1,
       threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Bill",
       text: "Seems like a pretty cool conference.",
       timestamp: Date.now() - 89999
     }, {
-      id: 2,
       threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Jing",
       text: "Sounds good.  Will they be serving dessert?",
       timestamp: Date.now() - 79999
     }, {
-      id: 3,
       threadID: 1,
       threadName: "Dave and Bill",
       authorName: "Bill",
       text: "Hey Dave, want to get a beer after the conference?",
       timestamp: Date.now() - 69999
     }, {
-      id: 4,
       threadID: 1,
       threadName: "Dave and Bill",
       authorName: "Dave",
       text: "Totally!  Meet you at the hotel bar.",
       timestamp: Date.now() - 59999
     }, {
-      id: 5,
       threadID: 2,
       threadName: "Functional Heads",
       authorName: "Bill",
       text: "Hey Brian, are you going to be talking about functional stuff?",
       timestamp: Date.now() - 49999
     }, {
-      id: 6,
       threadID: 2,
       threadName: "Bill and Brian",
       authorName: "Brian",
@@ -127,6 +120,7 @@ MessageAction = {
       text: text,
       isRead: true
     };
+    RiotControl.trigger('message_add', message);
     return WebAPIUtils.createMessage(message);
   }
 };
@@ -145,6 +139,9 @@ WebAPIUtils = require('../utils/WebAPIUtils');
 ServerAction = {
   receiveAll: function(rawMessages) {
     return RiotControl.trigger('server_raw_messages', rawMessages);
+  },
+  receiveCreatedMessage: function(createdMessage) {
+    return RiotControl.trigger('server_raw_created_message', createdMessage);
   }
 };
 
@@ -201,7 +198,7 @@ this.keydown = (function(_this) {
 this.add = (function(_this) {
   return function(e) {
     if (_this.text) {
-      MessageAction.add(_this.text);
+      MessageAction.add(_this.text, opts['thread-id']);
       return _this.text = _this.input.value = '';
     }
   };
@@ -211,7 +208,7 @@ this.add = (function(_this) {
 },{"../actions/MessageAction.coffee":"/Users/uzimith/learn/flux-practice/chat/js/actions/MessageAction.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('message-panel', '<div class="message-list"><div each="{ message, id in messages }" class="message clearfix"><h5>{ message.name }</h5><div class="message-date pull-right">{ message.date.fromNow() }</div><div class="message-last-message">{ message.text }</div></div></div><message-editor></message-editor>', function(opts) {var MessageStore, RiotControl, ThreadStore;
+riot.tag('message-panel', '<div class="message-list"><div each="{ message, id in messages }" class="message clearfix"><h5>{ message.name }</h5><div class="message-date pull-right">{ message.date.fromNow() }</div><div class="message-last-message">{ message.text }</div></div></div><message-editor thread-id="{ currentID }"></message-editor>', function(opts) {var MessageStore, RiotControl, ThreadStore;
 
 RiotControl = require('riotcontrol');
 
@@ -230,8 +227,9 @@ this.on('mount', (function(_this) {
 })(this));
 
 RiotControl.on('message_changed', (function(_this) {
-  return function(messages) {
-    _this.messages = messages;
+  return function(data) {
+    _this.messages = data.messages;
+    _this.currentID = data.currentID;
     return _this.update();
   };
 })(this));
@@ -240,7 +238,7 @@ RiotControl.on('message_changed', (function(_this) {
 },{"../stores/MessageStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee","../stores/ThreadStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('thread-panel', '<p>{currentID}</p><div class="list-group"><a each="{ thread, id in threads }" onclick="{ parent.selectThread }" class="list-group-item {active: id == parent.currentID}"><p>{id}</p><p>{parent.currentID}</p><h5 class="list-group-teim-heading">{ thread.name }</h5><p class="list-gropu item-text"><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></p></a></div><button onclick="{update}">update</button>', function(opts) {var RiotControl, ThreadAction;
+riot.tag('thread-panel', '<p>{currentID}</p><div class="list-group"><a each="{ thread, id in threads }" onclick="{ parent.selectThread }" class="list-group-item {active: id == parent.currentID}"><div class="pull-right"><p>{id}</p><p>{parent.currentID}</p></div><h5 class="list-group-teim-heading">{ thread.name }</h5><p class="list-gropu item-text"><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></p></a></div><button onclick="{update}" class="btn btn-default">update</button>', function(opts) {var RiotControl, ThreadAction;
 
 RiotControl = require('riotcontrol');
 
@@ -320,27 +318,35 @@ MessageStore = function() {
       return _results;
     };
   })(this);
+  this.emit = (function(_this) {
+    return function() {
+      return _this.trigger('message_changed', {
+        currentID: _this.currentID,
+        messages: _this.getMessages()
+      });
+    };
+  })(this);
   this.on('server_raw_messages', (function(_this) {
     return function(rawMessages) {
       _this.addMessages(rawMessages);
-      return _this.trigger('message_changed', _this.getMessages());
+      return _this.emit();
     };
   })(this));
   this.on('message_init', (function(_this) {
     return function() {
-      return _this.trigger('message_changed', _this.getMessages());
+      return _this.emit();
     };
   })(this));
   this.on('message_add', (function(_this) {
     return function(message) {
       _this.messages.push(message);
-      return _this.trigger('message_changed', _this.getMessages());
+      return _this.emit();
     };
   })(this));
   return this.on('thread_select', (function(_this) {
     return function(currentID) {
       _this.currentID = currentID;
-      return _this.trigger('message_changed', _this.getMessages());
+      return _this.emit();
     };
   })(this));
 };

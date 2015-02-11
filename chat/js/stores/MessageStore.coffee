@@ -17,19 +17,22 @@ MessageStore = ->
       if !@messages[id]
         @messages[id] = MessageUtils.convertRawMessage(message, @currentID)
 
+  @emit = =>
+    @trigger 'message_changed', {currentID: @currentID, messages: @getMessages()}
+
   @on 'server_raw_messages', (rawMessages) =>
     @addMessages(rawMessages)
-    @trigger 'message_changed', @getMessages()
+    @emit()
 
   @on 'message_init', =>
-    @trigger 'message_changed', @getMessages()
+    @emit()
 
   @on 'message_add', (message) =>
     @messages.push(message)
-    @trigger 'message_changed', @getMessages()
+    @emit()
 
   @on 'thread_select', (currentID)=>
     @currentID = currentID
-    @trigger 'message_changed', @getMessages()
+    @emit()
 
 module.exports = MessageStore

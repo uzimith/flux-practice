@@ -7048,3 +7048,11 @@ button.close {
   /* line 5, ../sass/main.sass */
   .message .message-date {
     color: #999; }
+
+/* line 8, ../sass/main.sass */
+.thread-date {
+  color: #999; }
+
+/* line 11, ../sass/main.sass */
+.active .thread-date {
+  color: #c7ddef; }

@@ -2,13 +2,14 @@ thread-panel
   p {currentID}
   .list-group
     a.list-group-item(each='{ thread, id in threads }' class='{active: id == parent.currentID}' onclick='{ parent.selectThread }')
-      p {id}
-      p {parent.currentID}
+      .pull-right
+        p {id}
+        p {parent.currentID}
       h5.list-group-teim-heading { thread.name }
       p.list-gropu.item-text
         .thread-date { thread.lastMessage.date.fromNow() }
         .thread-last-message { thread.lastMessage.text }
-  button(onclick='{update}') update
+  button.btn.btn-default(onclick='{update}') update
   script.
     RiotControl = require('riotcontrol')
     ThreadAction = require('../actions/ThreadAction.coffee')

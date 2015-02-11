@@ -4,7 +4,7 @@ message-panel
       h5 { message.name }
       .message-date.pull-right { message.date.fromNow() }
       .message-last-message { message.text }
-  message-editor
+  message-editor(thread-id='{ currentID }')
   script.
     RiotControl = require('riotcontrol')
     MessageStore = require('../stores/MessageStore.coffee')
@@ -16,6 +16,7 @@ message-panel
     @on 'mount', =>
       RiotControl.trigger 'message_init'
 
-    RiotControl.on 'message_changed', (messages)=>
-      @messages = messages
+    RiotControl.on 'message_changed', (data)=>
+      @messages = data.messages
+      @currentID = data.currentID
       @update()
