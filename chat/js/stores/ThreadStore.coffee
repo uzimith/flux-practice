@@ -37,15 +37,18 @@ ThreadStore = ->
       @currentID = allChrono[allChrono.length - 1].id
     @threads[@currentID].lastMessage.isRead = true
 
-  @on 'server_raw_messages', (rawMessages) =>
-    @initThreads(rawMessages)
+  @emit = ->
     @trigger 'thread_changed', @threads
 
+  @on 'server_raw_messages', (rawMessages) =>
+    @initThreads(rawMessages)
+    @emit()
+
   @on 'thread_init', =>
-    @trigger 'thread_changed', @threads
+    @emit()
 
   @on 'thread_select', (currentID)=>
     @currentID = currentID
-    @trigger 'thread_changed', @threads
+    @emit()
 
 module.exports = ThreadStore

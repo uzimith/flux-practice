@@ -208,7 +208,7 @@ this.add = (function(_this) {
 },{"../actions/MessageAction.coffee":"/Users/uzimith/learn/flux-practice/chat/js/actions/MessageAction.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('message-panel', '<div class="message-list"><div each="{ message, id in messages }" class="message clearfix"><h5>{ message.name }</h5><div class="message-date pull-right">{ message.date.fromNow() }</div><div class="message-last-message">{ message.text }</div></div></div><message-editor thread-id="{ currentID }"></message-editor>', function(opts) {var MessageStore, RiotControl, ThreadStore;
+riot.tag('message-panel', '<div class="message-list"><div each="{ message, id in messages }" class="message clearfix"><h5>{ message.authorName }</h5><div class="message-date pull-right">{ message.date.fromNow() }</div><div class="message-last-message">{ message.text }</div></div></div><message-editor thread-id="{ currentID }"></message-editor>', function(opts) {var MessageStore, RiotControl, ThreadStore;
 
 RiotControl = require('riotcontrol');
 
@@ -238,7 +238,7 @@ RiotControl.on('message_changed', (function(_this) {
 },{"../stores/MessageStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee","../stores/ThreadStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('thread-panel', '<p>{currentID}</p><div class="list-group"><a each="{ thread, id in threads }" onclick="{ parent.selectThread }" class="list-group-item {active: id == parent.currentID}"><div class="pull-right"><p>{id}</p><p>{parent.currentID}</p></div><h5 class="list-group-teim-heading">{ thread.name }</h5><p class="list-gropu item-text"><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></p></a></div><button onclick="{update}" class="btn btn-default">update</button>', function(opts) {var RiotControl, ThreadAction;
+riot.tag('thread-panel', '<div class="list-group"><a each="{ thread, id in threads }" onclick="{ parent.selectThread }" class="list-group-item {active: id == parent.currentID}"><h5 class="list-group-teim-heading">{ thread.name }</h5><p class="list-gropu item-text"><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></p></a></div>', function(opts) {var RiotControl, ThreadAction;
 
 RiotControl = require('riotcontrol');
 
@@ -264,7 +264,8 @@ RiotControl.on('thread_changed', (function(_this) {
 this.selectThread = (function(_this) {
   return function(e) {
     ThreadAction.select(e.item.id);
-    return _this.currentID = e.item.id;
+    _this.currentID = e.item.id;
+    return _this.update();
   };
 })(this);
 
@@ -414,21 +415,24 @@ ThreadStore = function() {
       return _this.threads[_this.currentID].lastMessage.isRead = true;
     };
   })(this);
+  this.emit = function() {
+    return this.trigger('thread_changed', this.threads);
+  };
   this.on('server_raw_messages', (function(_this) {
     return function(rawMessages) {
       _this.initThreads(rawMessages);
-      return _this.trigger('thread_changed', _this.threads);
+      return _this.emit();
     };
   })(this));
   this.on('thread_init', (function(_this) {
     return function() {
-      return _this.trigger('thread_changed', _this.threads);
+      return _this.emit();
     };
   })(this));
   return this.on('thread_select', (function(_this) {
     return function(currentID) {
       _this.currentID = currentID;
-      return _this.trigger('thread_changed', _this.threads);
+      return _this.emit();
     };
   })(this));
 };
