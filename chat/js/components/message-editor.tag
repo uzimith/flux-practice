@@ -18,5 +18,5 @@ message-editor
 
     @add = (e) =>
       if (@text)
-        MessageAction.add(@text, opts['thread-id'])
+        MessageAction.add(@text)
         @text = @input.value = ''

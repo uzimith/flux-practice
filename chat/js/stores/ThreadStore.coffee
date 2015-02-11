@@ -1,16 +1,38 @@
 riot = require('riot')
 MessageUtils = require('../utils/MessageUtils.coffee')
 
-ThreadStore = ->
-  riot.observable(this)
+class ThreadStore
 
-  @currentID = 0
-  @threads = []
+  currentID: 0
+  threads: []
 
-  @getCurrent = =>
+  constructor: (@message) ->
+    riot.observable(this)
+
+    @on 'server_raw_messages', (rawMessages) =>
+      @initThreads(rawMessages)
+      @emit()
+
+    @on 'thread_init', =>
+      @emit()
+
+    @on 'thread_select', (currentID)=>
+      @currentID = currentID
+      @emit()
+
+  emit: ->
+    @trigger 'thread_changed', @threads
+
+  getCurrentID: =>
+    @currentID
+
+  getCurrentThread: =>
     @threads[@currentID]
 
-  @getAllChrono = =>
+  getThreads: =>
+    @threads
+
+  getAllChrono: =>
     orderedThreads = []
     for thread in @threads
       orderedThreads.push(thread)
@@ -22,7 +44,7 @@ ThreadStore = ->
       return 0
     return orderedThreads
 
-  @initThreads = (rawMessages) =>
+  initThreads: (rawMessages) =>
     for message, id in rawMessages
       threadID = message.threadID
       thread = @threads[threadID]
@@ -37,18 +59,4 @@ ThreadStore = ->
       @currentID = allChrono[allChrono.length - 1].id
     @threads[@currentID].lastMessage.isRead = true
 
-  @emit = ->
-    @trigger 'thread_changed', @threads
-
-  @on 'server_raw_messages', (rawMessages) =>
-    @initThreads(rawMessages)
-    @emit()
-
-  @on 'thread_init', =>
-    @emit()
-
-  @on 'thread_select', (currentID)=>
-    @currentID = currentID
-    @emit()
-
-module.exports = ThreadStore
+module.exports = new ThreadStore

@@ -1,11 +1,13 @@
 RiotControl = require('riotcontrol')
 WebAPIUtils = require('../utils/WebAPIUtils')
+ThreadStore = require('../stores/ThreadStore.coffee')
+
 moment = require('moment')
 
 MessageAction =
-  add: (text, threadID) ->
+  add: (text) ->
     message =
-      threadID: threadID
+      threadID: ThreadStore.getCurrentID()
       authorName: 'Bill'
       date: moment()
       text: text

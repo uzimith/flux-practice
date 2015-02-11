@@ -8,6 +8,8 @@ thread-panel
   script.
     RiotControl = require('riotcontrol')
     ThreadAction = require('../actions/ThreadAction.coffee')
+    MessageStore = require('../stores/MessageStore.coffee')
+    ThreadStore = require('../stores/ThreadStore.coffee')
 
     @currentID = 0
     @threads = []
@@ -15,8 +17,9 @@ thread-panel
     @on 'mount', =>
       RiotControl.trigger 'thread_init'
 
-    RiotControl.on 'thread_changed', (threads) =>
-      @threads = threads
+    RiotControl.on 'thread_changed', =>
+      @threads = ThreadStore.getThreads()
+      @currentID = ThreadStore.getCurrentID()
       @update()
 
     @selectThread = (e) =>
