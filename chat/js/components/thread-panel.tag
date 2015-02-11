@@ -1,23 +1,28 @@
 thread-panel
-  h2 Thread
-  p { currentId }
-  ul
-    li(each='{ thread, id in threads }' class='{active: id == parent.currentId}' onclick='{ parent.toggleThread }')
-      h5 { thread.title }
-      .thread-date { thread.lastMessage.date.fromNow() }
-      .thread-last-message { thread.lastMessage.text }
+  p {currentID}
+  .list-group
+    a.list-group-item(each='{ thread, id in threads }' class='{active: id == parent.currentID}' onclick='{ parent.selectThread }')
+      p {id}
+      p {parent.currentID}
+      h5.list-group-teim-heading { thread.name }
+      p.list-gropu.item-text
+        .thread-date { thread.lastMessage.date.fromNow() }
+        .thread-last-message { thread.lastMessage.text }
+  button(onclick='{update}') update
   script.
-    RiotControl = require('../riotcontrol')
+    RiotControl = require('riotcontrol')
+    ThreadAction = require('../actions/ThreadAction.coffee')
 
-    @currentId = 1
+    @currentID = 0
     @threads = []
 
     @on 'mount', =>
       RiotControl.trigger 'thread_init'
 
-    RiotControl.on 'thread_changed', (threads)=>
+    RiotControl.on 'thread_changed', (threads) =>
       @threads = threads
       @update()
 
-    @toggleThread = (e)=>
-      @currentId = e.item.id
+    @selectThread = (e) =>
+      ThreadAction.select(e.item.id)
+      @currentID = e.item.id

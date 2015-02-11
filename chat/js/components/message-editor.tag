@@ -1,5 +1,22 @@
 message-editor
-  textarea(name='input' onkeyup='{ edit }')
+  form(onsubmit='{ add }')
+    textarea.form-control(name='input' onchange='{ edit }' onkeydown='{ keydown }')
   script.
+    MessageAction = require('../actions/MessageAction.coffee')
+
+    ENTER_KEY_CODE = 13
+
     @edit = (e) =>
-      @text = e.target.value
+
+    @keydown = (e) =>
+      if e.keyCode is ENTER_KEY_CODE
+        @add(e)
+        return false
+      else
+        @text = e.target.value
+        return true
+
+    @add = (e) =>
+      if (@text)
+        MessageAction.add(@text)
+        @text = @input.value = ''

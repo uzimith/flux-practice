@@ -1,35 +1,41 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"./js/app.coffee":[function(require,module,exports){
-var ChatExampleData, MessageStore, RiotControl, ThreadStore, riot;
+var ChatExampleData, MessageStore, RiotControl, ThreadStore, WebAPIUtils, riot;
 
 riot = require('riot');
 
-RiotControl = require('./riotcontrol.js');
-
-require('./components/app.tag');
-
-require('./components/message-panel.tag');
-
-require('./components/thread-panel.tag');
-
-require('./components/thread.tag');
+RiotControl = require('riotcontrol');
 
 ChatExampleData = require('./ChatExampleData');
-
-ChatExampleData.init();
 
 MessageStore = require('./stores/MessageStore.coffee');
 
 ThreadStore = require('./stores/ThreadStore.coffee');
 
-RiotControl.addStore(new MessageStore);
+require('./components/app.tag');
 
-RiotControl.addStore(new ThreadStore);
+require('./components/message-panel.tag');
+
+require('./components/message-editor.tag');
+
+require('./components/thread-panel.tag');
+
+require('./components/thread.tag');
+
+ChatExampleData.init();
+
+RiotControl.addStore(new ThreadStore());
+
+RiotControl.addStore(new MessageStore());
+
+WebAPIUtils = require('./utils/WebAPIUtils');
+
+WebAPIUtils.getAllMessages();
 
 riot.mount('*');
 
 
 
-},{"./ChatExampleData":"/Users/uzimith/learn/flux-practice/chat/js/ChatExampleData.js","./components/app.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/app.tag","./components/message-panel.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag","./components/thread-panel.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag","./components/thread.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/thread.tag","./riotcontrol.js":"/Users/uzimith/learn/flux-practice/chat/js/riotcontrol.js","./stores/MessageStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee","./stores/ThreadStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/ChatExampleData.js":[function(require,module,exports){
+},{"./ChatExampleData":"/Users/uzimith/learn/flux-practice/chat/js/ChatExampleData.js","./components/app.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/app.tag","./components/message-editor.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/message-editor.tag","./components/message-panel.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag","./components/thread-panel.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag","./components/thread.tag":"/Users/uzimith/learn/flux-practice/chat/js/components/thread.tag","./stores/MessageStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee","./stores/ThreadStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee","./utils/WebAPIUtils":"/Users/uzimith/learn/flux-practice/chat/js/utils/WebAPIUtils.js","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/ChatExampleData.js":[function(require,module,exports){
 "use strict";
 
 /**
@@ -49,50 +55,50 @@ module.exports = {
   init: function () {
     localStorage.clear();
     localStorage.setItem("messages", JSON.stringify([{
-      id: "m_1",
-      threadID: "t_1",
+      id: 0,
+      threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Bill",
       text: "Hey Jing, want to give a Flux talk at ForwardJS?",
       timestamp: Date.now() - 99999
     }, {
-      id: "m_2",
-      threadID: "t_1",
+      id: 1,
+      threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Bill",
       text: "Seems like a pretty cool conference.",
       timestamp: Date.now() - 89999
     }, {
-      id: "m_3",
-      threadID: "t_1",
+      id: 2,
+      threadID: 0,
       threadName: "Jing and Bill",
       authorName: "Jing",
       text: "Sounds good.  Will they be serving dessert?",
       timestamp: Date.now() - 79999
     }, {
-      id: "m_4",
-      threadID: "t_2",
+      id: 3,
+      threadID: 1,
       threadName: "Dave and Bill",
       authorName: "Bill",
       text: "Hey Dave, want to get a beer after the conference?",
       timestamp: Date.now() - 69999
     }, {
-      id: "m_5",
-      threadID: "t_2",
+      id: 4,
+      threadID: 1,
       threadName: "Dave and Bill",
       authorName: "Dave",
       text: "Totally!  Meet you at the hotel bar.",
       timestamp: Date.now() - 59999
     }, {
-      id: "m_6",
-      threadID: "t_3",
+      id: 5,
+      threadID: 2,
       threadName: "Functional Heads",
       authorName: "Bill",
       text: "Hey Brian, are you going to be talking about functional stuff?",
       timestamp: Date.now() - 49999
     }, {
-      id: "m_7",
-      threadID: "t_3",
+      id: 6,
+      threadID: 2,
       threadName: "Bill and Brian",
       authorName: "Brian",
       text: "At ForwardJS?  Yeah, of course.  See you there!",
@@ -102,26 +108,145 @@ module.exports = {
 
 };
 
-},{}],"/Users/uzimith/learn/flux-practice/chat/js/components/app.tag":[function(require,module,exports){
+},{}],"/Users/uzimith/learn/flux-practice/chat/js/actions/MessageAction.coffee":[function(require,module,exports){
+var MessageAction, RiotControl, WebAPIUtils, moment;
+
+RiotControl = require('riotcontrol');
+
+WebAPIUtils = require('../utils/WebAPIUtils');
+
+moment = require('moment');
+
+MessageAction = {
+  add: function(text, threadID) {
+    var message;
+    message = {
+      threadID: threadID,
+      authorName: 'Bill',
+      date: moment(),
+      text: text,
+      isRead: true
+    };
+    return WebAPIUtils.createMessage(message);
+  }
+};
+
+module.exports = MessageAction;
+
+
+
+},{"../utils/WebAPIUtils":"/Users/uzimith/learn/flux-practice/chat/js/utils/WebAPIUtils.js","moment":"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/actions/ServerAction.coffee":[function(require,module,exports){
+var RiotControl, ServerAction, WebAPIUtils;
+
+RiotControl = require('riotcontrol');
+
+WebAPIUtils = require('../utils/WebAPIUtils');
+
+ServerAction = {
+  receiveAll: function(rawMessages) {
+    return RiotControl.trigger('server_raw_messages', rawMessages);
+  }
+};
+
+module.exports = ServerAction;
+
+
+
+},{"../utils/WebAPIUtils":"/Users/uzimith/learn/flux-practice/chat/js/utils/WebAPIUtils.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/actions/ThreadAction.coffee":[function(require,module,exports){
+var RiotControl, ThreadAction;
+
+RiotControl = require('riotcontrol');
+
+ThreadAction = {
+  select: function(currentID) {
+    return RiotControl.trigger('thread_select', currentID);
+  }
+};
+
+module.exports = ThreadAction;
+
+
+
+},{"riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/app.tag":[function(require,module,exports){
 var riot = require('riot');
 
 riot.tag('app', '<header class="navbar navbar-default navbar-static-top"><div class="container"><div class="navbar-header"><div class="navbar-brand">Chat</div></div></div></header><div class="container"><thread-panel class="col-md-3"></thread-panel><message-panel class="col-md-6"></message-panel></div>', function(opts) {
 
 });
-},{"riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag":[function(require,module,exports){
+},{"riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/message-editor.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('message-panel', '<h3>Message</h3><message-editor></message-editor>', function(opts) {
+riot.tag('message-editor', '<form onsubmit="{ add }"><textarea name="input" onchange="{ edit }" onkeydown="{ keydown }" class="form-control"></textarea></form>', function(opts) {var ENTER_KEY_CODE, MessageAction;
+
+MessageAction = require('../actions/MessageAction.coffee');
+
+ENTER_KEY_CODE = 13;
+
+this.edit = (function(_this) {
+  return function(e) {};
+})(this);
+
+this.keydown = (function(_this) {
+  return function(e) {
+    if (e.keyCode === ENTER_KEY_CODE) {
+      _this.add(e);
+      return false;
+    } else {
+      _this.text = e.target.value;
+      return true;
+    }
+  };
+})(this);
+
+this.add = (function(_this) {
+  return function(e) {
+    if (_this.text) {
+      MessageAction.add(_this.text);
+      return _this.text = _this.input.value = '';
+    }
+  };
+})(this);
 
 });
-},{"riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag":[function(require,module,exports){
+},{"../actions/MessageAction.coffee":"/Users/uzimith/learn/flux-practice/chat/js/actions/MessageAction.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/message-panel.tag":[function(require,module,exports){
 var riot = require('riot');
 
-riot.tag('thread-panel', '<h2>Thread</h2><p>{ currentId }</p><ul><li each="{ thread, id in threads }" onclick="{ parent.toggleThread }" class="{active: id == parent.currentId}"><h5>{ thread.title }</h5><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></li></ul>', function(opts) {var RiotControl;
+riot.tag('message-panel', '<div class="message-list"><div each="{ message, id in messages }" class="message clearfix"><h5>{ message.name }</h5><div class="message-date pull-right">{ message.date.fromNow() }</div><div class="message-last-message">{ message.text }</div></div></div><message-editor></message-editor>', function(opts) {var MessageStore, RiotControl, ThreadStore;
 
-RiotControl = require('../riotcontrol');
+RiotControl = require('riotcontrol');
 
-this.currentId = 1;
+MessageStore = require('../stores/MessageStore.coffee');
+
+ThreadStore = require('../stores/ThreadStore.coffee');
+
+this.messages = [];
+
+this.thread = "";
+
+this.on('mount', (function(_this) {
+  return function() {
+    return RiotControl.trigger('message_init');
+  };
+})(this));
+
+RiotControl.on('message_changed', (function(_this) {
+  return function(messages) {
+    _this.messages = messages;
+    return _this.update();
+  };
+})(this));
+
+});
+},{"../stores/MessageStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee","../stores/ThreadStore.coffee":"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread-panel.tag":[function(require,module,exports){
+var riot = require('riot');
+
+riot.tag('thread-panel', '<p>{currentID}</p><div class="list-group"><a each="{ thread, id in threads }" onclick="{ parent.selectThread }" class="list-group-item {active: id == parent.currentID}"><p>{id}</p><p>{parent.currentID}</p><h5 class="list-group-teim-heading">{ thread.name }</h5><p class="list-gropu item-text"><div class="thread-date">{ thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{ thread.lastMessage.text }</div></p></a></div><button onclick="{update}">update</button>', function(opts) {var RiotControl, ThreadAction;
+
+RiotControl = require('riotcontrol');
+
+ThreadAction = require('../actions/ThreadAction.coffee');
+
+this.currentID = 0;
 
 this.threads = [];
 
@@ -138,64 +263,84 @@ RiotControl.on('thread_changed', (function(_this) {
   };
 })(this));
 
-this.toggleThread = (function(_this) {
+this.selectThread = (function(_this) {
   return function(e) {
-    return _this.currentId = e.item.id;
+    ThreadAction.select(e.item.id);
+    return _this.currentID = e.item.id;
   };
 })(this);
 
 });
-},{"../riotcontrol":"/Users/uzimith/learn/flux-practice/chat/js/riotcontrol.js","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread.tag":[function(require,module,exports){
+},{"../actions/ThreadAction.coffee":"/Users/uzimith/learn/flux-practice/chat/js/actions/ThreadAction.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js","riotcontrol":"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js"}],"/Users/uzimith/learn/flux-practice/chat/js/components/thread.tag":[function(require,module,exports){
 var riot = require('riot');
 
 riot.tag('thread', '<h5>{ opts.thread.title }</h5><p>{active}</p><div class="thread-date">{opts.thread.lastMessage.date.fromNow() }</div><div class="thread-last-message">{opts.thread.lastMessage.text }</div>', function(opts) {
 
 });
-},{"riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/riotcontrol.js":[function(require,module,exports){
-"use strict";
-
-var RiotControl = {
-  _stores: [],
-  addStore: function addStore(store) {
-    this._stores.push(store);
-  },
-  trigger: function trigger() {
-    var args = [].slice.call(arguments);
-    this._stores.forEach(function (el) {
-      el.trigger.apply(null, args);
-    });
-  },
-  on: function on(ev, cb) {
-    this._stores.forEach(function (el) {
-      el.on(ev, cb);
-    });
-  },
-  off: function off(ev, cb) {
-    this._stores.forEach(function (el) {
-      if (cb) el.off(ev, cb);else el.off(ev);
-    });
-  },
-  one: function one(ev, cb) {
-    this._stores.forEach(function (el) {
-      el.one(ev, cb);
-    });
-  }
-};
-module.exports = RiotControl;
-
-},{}],"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee":[function(require,module,exports){
-var MessageStore, moment, riot;
+},{"riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/stores/MessageStore.coffee":[function(require,module,exports){
+var MessageStore, MessageUtils, moment, riot;
 
 riot = require('riot');
 
 moment = require('moment');
 
+MessageUtils = require('../utils/MessageUtils.coffee');
+
 MessageStore = function() {
   riot.observable(this);
+  this.currentID = 0;
   this.messages = [];
-  return this.on('message_init', (function(_this) {
+  this.currentMessages = [];
+  this.getMessages = (function(_this) {
     return function() {
-      return _this.trigger('message_changed', _this.messages);
+      var id, message, _i, _len, _ref, _results;
+      _ref = _this.messages;
+      _results = [];
+      for (id = _i = 0, _len = _ref.length; _i < _len; id = ++_i) {
+        message = _ref[id];
+        if (message.threadID === _this.currentID) {
+          _results.push(message);
+        }
+      }
+      return _results;
+    };
+  })(this);
+  this.addMessages = (function(_this) {
+    return function(rawMessages) {
+      var id, message, _i, _len, _results;
+      _results = [];
+      for (id = _i = 0, _len = rawMessages.length; _i < _len; id = ++_i) {
+        message = rawMessages[id];
+        if (!_this.messages[id]) {
+          _results.push(_this.messages[id] = MessageUtils.convertRawMessage(message, _this.currentID));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+  })(this);
+  this.on('server_raw_messages', (function(_this) {
+    return function(rawMessages) {
+      _this.addMessages(rawMessages);
+      return _this.trigger('message_changed', _this.getMessages());
+    };
+  })(this));
+  this.on('message_init', (function(_this) {
+    return function() {
+      return _this.trigger('message_changed', _this.getMessages());
+    };
+  })(this));
+  this.on('message_add', (function(_this) {
+    return function(message) {
+      _this.messages.push(message);
+      return _this.trigger('message_changed', _this.getMessages());
+    };
+  })(this));
+  return this.on('thread_select', (function(_this) {
+    return function(currentID) {
+      _this.currentID = currentID;
+      return _this.trigger('message_changed', _this.getMessages());
     };
   })(this));
 };
@@ -204,32 +349,79 @@ module.exports = MessageStore;
 
 
 
-},{"moment":"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee":[function(require,module,exports){
-var ThreadStore, moment, riot;
+},{"../utils/MessageUtils.coffee":"/Users/uzimith/learn/flux-practice/chat/js/utils/MessageUtils.coffee","moment":"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/stores/ThreadStore.coffee":[function(require,module,exports){
+var MessageUtils, ThreadStore, riot;
 
 riot = require('riot');
 
-moment = require('moment');
+MessageUtils = require('../utils/MessageUtils.coffee');
 
 ThreadStore = function() {
   riot.observable(this);
-  this.threads = [
-    {
-      title: "1",
-      lastMessage: {
-        date: moment(),
-        text: "Looks good to me."
-      }
-    }, {
-      title: "tow",
-      lastMessage: {
-        date: moment(),
-        text: "Looks bad to me."
-      }
-    }
-  ];
-  return this.on('thread_init', (function(_this) {
+  this.currentID = 0;
+  this.threads = [];
+  this.getCurrent = (function(_this) {
     return function() {
+      return _this.threads[_this.currentID];
+    };
+  })(this);
+  this.getAllChrono = (function(_this) {
+    return function() {
+      var orderedThreads, thread, _i, _len, _ref;
+      orderedThreads = [];
+      _ref = _this.threads;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        thread = _ref[_i];
+        orderedThreads.push(thread);
+      }
+      orderedThreads.sort(function(a, b) {
+        if (a.lastMessage.date < b.lastMessage.date) {
+          return -1;
+        } else if (a.lastMessage.date > b.lastMessage.date) {
+          return 1;
+        }
+        return 0;
+      });
+      return orderedThreads;
+    };
+  })(this);
+  this.initThreads = (function(_this) {
+    return function(rawMessages) {
+      var allChrono, id, message, thread, threadID, _i, _len;
+      for (id = _i = 0, _len = rawMessages.length; _i < _len; id = ++_i) {
+        message = rawMessages[id];
+        threadID = message.threadID;
+        thread = _this.threads[threadID];
+        if (thread && thread.lastTimestamp > message.timestamp) {
+          return;
+        }
+        _this.threads[threadID] = {
+          id: threadID,
+          name: message.threadName,
+          lastMessage: MessageUtils.convertRawMessage(message, _this.currentID)
+        };
+      }
+      if (!_this.currentID) {
+        allChrono = _this.getAllChrono();
+        _this.currentID = allChrono[allChrono.length - 1].id;
+      }
+      return _this.threads[_this.currentID].lastMessage.isRead = true;
+    };
+  })(this);
+  this.on('server_raw_messages', (function(_this) {
+    return function(rawMessages) {
+      _this.initThreads(rawMessages);
+      return _this.trigger('thread_changed', _this.threads);
+    };
+  })(this));
+  this.on('thread_init', (function(_this) {
+    return function() {
+      return _this.trigger('thread_changed', _this.threads);
+    };
+  })(this));
+  return this.on('thread_select', (function(_this) {
+    return function(currentID) {
+      _this.currentID = currentID;
       return _this.trigger('thread_changed', _this.threads);
     };
   })(this));
@@ -239,7 +431,89 @@ module.exports = ThreadStore;
 
 
 
-},{"moment":"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js":[function(require,module,exports){
+},{"../utils/MessageUtils.coffee":"/Users/uzimith/learn/flux-practice/chat/js/utils/MessageUtils.coffee","riot":"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js"}],"/Users/uzimith/learn/flux-practice/chat/js/utils/MessageUtils.coffee":[function(require,module,exports){
+var MessageUtils, moment;
+
+moment = require('moment');
+
+MessageUtils = {
+  convertRawMessage: function(rawMessage, currentThreadID) {
+    return {
+      id: rawMessage.id,
+      threadID: rawMessage.threadID,
+      authorName: rawMessage.authorName,
+      date: moment(new Date(rawMessage.timestamp)),
+      text: rawMessage.text,
+      isRead: rawMessage.threadID === currentThreadID
+    };
+  }
+};
+
+module.exports = MessageUtils;
+
+
+
+},{"moment":"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js"}],"/Users/uzimith/learn/flux-practice/chat/js/utils/WebAPIUtils.js":[function(require,module,exports){
+"use strict";
+
+/**
+ * This file is provided by Facebook for testing and evaluation purposes
+ * only. Facebook reserves all rights not expressly granted.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+/* edited by uzimy */
+
+// !!! Please Note !!!
+// We are using localStorage as an example, but in a real-world scenario, this
+// would involve XMLHttpRequest, or perhaps a newer client-server protocol.
+// The function signatures below might be similar to what you would build, but
+// the contents of the functions are just trying to simulate client-server
+// communication and server-side processing.
+
+module.exports = {
+
+  getAllMessages: function () {
+    // simulate retrieving data from a database
+    var rawMessages = JSON.parse(localStorage.getItem("messages"));
+    var ServerAction = require("../actions/ServerAction.coffee");
+
+    // simulate success callback
+    ServerAction.receiveAll(rawMessages);
+  },
+
+  createMessage: function (message, threadName) {
+    // simulate writing to a database
+    var rawMessages = JSON.parse(localStorage.getItem("messages"));
+    var timestamp = Date.now();
+    var id = "m_" + timestamp;
+    var threadID = message.threadID || "t_" + Date.now();
+    var createdMessage = {
+      id: id,
+      threadID: threadID,
+      threadName: threadName,
+      authorName: message.authorName,
+      text: message.text,
+      timestamp: timestamp
+    };
+    rawMessages.push(createdMessage);
+    localStorage.setItem("messages", JSON.stringify(rawMessages));
+
+    // simulate success callback
+    setTimeout(function () {
+      var ServerAction = require("../actions/ServerAction.coffee");
+      ServerAction.receiveCreatedMessage(createdMessage);
+    }, 0);
+  }
+
+};
+
+},{"../actions/ServerAction.coffee":"/Users/uzimith/learn/flux-practice/chat/js/actions/ServerAction.coffee"}],"/Users/uzimith/learn/flux-practice/chat/node_modules/moment/moment.js":[function(require,module,exports){
 (function (global){
 //! moment.js
 //! version : 2.9.0
@@ -3288,11 +3562,11 @@ module.exports = ThreadStore;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{}],"/Users/uzimith/learn/flux-practice/chat/node_modules/riot/riot.js":[function(require,module,exports){
-/* Riot 2.0.7, @license MIT, (c) 2015 Muut Inc. + contributors */
+/* Riot v2.0.8, @license MIT, (c) 2015 Muut Inc. + contributors */
 
 ;(function() {
 
-var riot = { version: 'v2.0.7' }
+var riot = { version: 'v2.0.8', settings: {} }
 
 'use strict'
 
@@ -3439,44 +3713,64 @@ except zero (undefined/null/false) will default to empty string:
 tmpl('{ undefined } - { false } - { null } - { 0 }', {})
 // will return: " - - - 0"
 
+
+// Customizable brackets
+
+  riot.settings.brackets = '[ ]'
+  riot.settings.brackets = '<% %>'
+
 */
 
-riot._tmpl = (function() {
+var tmpl = (function() {
 
   var cache = {},
-
-      // find variable names
-      re_vars = /("|').+?[^\\]\1|\.\w*|\w*:|\b(?:this|true|false|null|undefined|new|typeof|Number|String|Object|Array|Math|Date|JSON)\b|([a-z_]\w*)/gi
-              // [ 1            ][ 2  ][ 3 ][ 4                                                                                        ][ 5       ]
+      brackets,
+      re_expr,
+      re_vars = /("|').+?[^\\]\1|\.\w*|\w*:|\b(?:(?:new|typeof|in|instanceof) |(?:this|true|false|null|undefined)\b|function *\()|([a-z_]\w*)/gi
+              // [ 1            ][ 2  ][ 3 ][ 4                                                                                  ][ 5       ]
+              // find variable names:
               // 1. skip quoted strings: "a b", 'a b', 'a \'b\''
               // 2. skip object properties: .name
               // 3. skip object literals: name:
-              // 4. skip reserved words
+              // 4. skip javascript keywords
               // 5. match var name
 
-  // build a template (or get it from cache), render with data
-
   return function(str, data) {
-    return str && (cache[str] = cache[str] || tmpl(str))(data)
+
+    // make sure we use current brackets setting
+    var b = riot.settings.brackets || '{ }'
+    if(b != brackets){
+      brackets = b.split(' ')
+      re_expr = re(/({[\s\S]*?})/)
+    }
+
+    // build a template (or get it from cache), render with data
+    // (or just test if string has expression when called w/o data)
+    return data
+      ? str && (cache[str] = cache[str] || tmpl(str))(data)
+      : re_expr.test(str)
+
   }
 
 
   // create a template instance
 
   function tmpl(s, p) {
-    p = (s || '{}')
+
+    // default template string to {}
+    p = (s || brackets.join(''))
 
       // temporarily convert \{ and \} to a non-character
-      .replace(/\\{/g, '\uFFF0')
-      .replace(/\\}/g, '\uFFF1')
-
+      .replace(re(/\\{/), '\uFFF0')
+      .replace(re(/\\}/), '\uFFF1')
+      
       // split string to expression and non-expresion parts
-      .split(/({[\s\S]*?})/)
+      .split(re_expr)
 
     return new Function('d', 'return ' + (
 
       // is it a single expression or a template? i.e. {x} or <b>{x}</b>
-      !p[0] && !p[2]
+      !p[0] && !p[2] && !p[3]
 
         // if expression, evaluate it
         ? expr(p[1])
@@ -3505,8 +3799,8 @@ riot._tmpl = (function() {
       )
 
       // bring escaped { and } back
-      .replace(/\uFFF0/g, '{')
-      .replace(/\uFFF1/g, '}')
+      .replace(/\uFFF0/g, brackets[0])
+      .replace(/\uFFF1/g, brackets[1])
 
     )
 
@@ -3522,7 +3816,7 @@ riot._tmpl = (function() {
       .replace(/\n/g, ' ')
 
       // trim whitespace, curly brackets, strip comments
-      .replace(/^[{ ]+|[ }]+$|\/\*.+?\*\//g, '')
+      .replace(re(/^[{ ]+|[ }]+$|\/\*.+?\*\//g), '')
 
     // is it an object literal? i.e. { key : value }
     return /^\s*[\w-"']+ *:/.test(s)
@@ -3548,7 +3842,7 @@ riot._tmpl = (function() {
     return '(function(v){try{v='
 
         // prefix vars (name => data.name)
-        + (s.replace(re_vars, function(s, _, v) { return v ? 'd.' + v : s })
+        + (s.replace(re_vars, function(s, _, v) { return v ? '(d.'+v+'===undefined?window.'+v+':d.'+v+')' : s })
 
           // break the expression if its empty (resulting in undefined value)
           || 'x')
@@ -3561,424 +3855,487 @@ riot._tmpl = (function() {
       + '}}).call(d)'
   }
 
+
+  // change regexp to use custom brackets
+
+  function re(r) {
+    return RegExp(r.source
+                   .split('{').join('\\'+brackets[0])
+                   .split('}').join('\\'+brackets[1]),
+                  r.global ? 'g' : '')
+  }
+
 })()
-;(function(riot, is_browser) {
+// { key, i in items} -> { key, i, items }
+function loopKeys(expr) {
+  var ret = { val: expr },
+      els = expr.split(/\s+in\s+/)
 
-  if (!is_browser) return
+  if (els[1]) {
+    ret.val = '{ ' + els[1]
+    els = els[0].slice(1).trim().split(/,\s*/)
+    ret.key = els[0]
+    ret.pos = els[1]
+  }
+  return ret
+}
 
-  var tmpl = riot._tmpl,
-      all_tags = [],
-      tag_impl = {},
-      doc = document
+function _each(dom, parent, expr) {
 
-  function each(nodes, fn) {
-    for (var i = 0; i < (nodes || []).length; i++) {
-      if (fn(nodes[i], i) === false) i--
+  remAttr(dom, 'each')
+
+  var template = dom.outerHTML,
+      prev = dom.previousSibling,
+      root = dom.parentNode,
+      rendered = [],
+      tags = [],
+      checksum
+
+  expr = loopKeys(expr)
+
+  // clean template code after update (and let walk finish it's parse)
+  parent.one('update', function() {
+    root.removeChild(dom)
+
+  }).one('mount', function() {
+    if (!hasParent(root)) root = parent.root
+
+  }).on('update', function() {
+
+    var items = tmpl(expr.val, parent)
+    if (!items) return
+
+    // object loop. any changes cause full redraw
+    if (!Array.isArray(items)) {
+      var testsum = JSON.stringify(items)
+      if (testsum == checksum) return
+      checksum = testsum
+
+      // clear old items
+      tags.map(function(tag) {
+        tag.unmount()
+      })
+
+      tags = rendered = []
+
+      items = Object.keys(items).map(function(key, i) {
+        var obj = {}
+        obj[expr.key] = key
+        obj[expr.pos] = items[key]
+        return obj
+      })
+
+    }
+
+    // unmount redundant
+    arrDiff(rendered, items).map(function(item) {
+      var pos = rendered.indexOf(item),
+          tag = tags[pos]
+
+      if (tag) {
+        tag.unmount()
+        rendered.splice(pos, 1)
+        tags.splice(pos, 1)
+      }
+    })
+
+    // mount new
+    var nodes = root.childNodes,
+        prev_index = Array.prototype.indexOf.call(nodes, prev)
+
+    arrDiff(items, rendered).map(function(item, i) {
+
+      var pos = items.indexOf(item)
+
+      if (!checksum && expr.key) {
+        var obj = {}
+        obj[expr.key] = item
+        obj[expr.pos] = pos
+        item = obj
+      }
+
+      var tag = new Tag({ tmpl: template }, {
+        before: nodes[prev_index + 1 + pos],
+        parent: parent,
+        root: root,
+        loop: true,
+        item: item
+      })
+
+      tags.splice(pos, 0, tag)
+
+    })
+
+    rendered = items.slice()
+
+  })
+
+}
+function parseNamedElements(root, tag, expressions) {
+  walk(root, function(dom) {
+    if (dom.nodeType != 1) return
+
+    each(dom.attributes, function(attr) {
+      if (/^(name|id)$/.test(attr.name)) tag[attr.value] = dom
+    })
+  })
+}
+
+function parseLayout(root, tag, expressions) {
+
+  function addExpr(dom, value, data) {
+    if (tmpl(value) || data) {
+      var expr = { dom: dom, expr: value }
+      expressions.push(extend(expr, data || {}))
     }
   }
 
-  function extend(obj, from) {
-    from && Object.keys(from).map(function(key) {
-      obj[key] = from[key]
-    })
-    return obj
-  }
+  walk(root, function(dom) {
 
-  function diff(arr1, arr2) {
-    return arr1.filter(function(el) {
-      return arr2.indexOf(el) < 0
-    })
-  }
+    var type = dom.nodeType
 
-  function walk(dom, fn) {
-    dom = fn(dom) === false ? dom.nextSibling : dom.firstChild
+    // text node
+    if (type == 3 && dom.parentNode.tagName != 'STYLE') addExpr(dom, dom.nodeValue)
+    if (type != 1) return
 
-    while (dom) {
-      walk(dom, fn)
-      dom = dom.nextSibling
+    /* element */
+
+    // loop
+    var attr = dom.getAttribute('each')
+    if (attr) { _each(dom, tag, attr); return false }
+
+    // child tag
+    var impl = tag_impl[dom.tagName.toLowerCase()]
+    if (impl) {
+      impl = new Tag(impl, { root: dom, parent: tag })
+      return false
     }
-  }
-
-
-  function mkdom(tmpl) {
-    var tag_name = tmpl.trim().slice(1, 3).toLowerCase(),
-        root_tag = /td|th/.test(tag_name) ? 'tr' : tag_name == 'tr' ? 'tbody' : 'div'
-        el = doc.createElement(root_tag)
-
-    el.innerHTML = tmpl
-    return el
-  }
-
-
-  function update(expressions, instance) {
-
-    // allow recalculation of context data
-    instance.trigger('update')
-
-    each(expressions, function(expr) {
-      var tag = expr.tag,
-          dom = expr.dom
-
-      function remAttr(name) {
-        dom.removeAttribute(name)
-      }
-
-      // loops first: TODO remove from expressions arr
-      if (expr.loop) {
-        remAttr('each')
-        return loop(expr, instance)
-      }
-
-      // custom tag
-      if (tag) return tag.update ? tag.update() :
-        expr.tag = createTag({ tmpl: tag[0], fn: tag[1], root: dom, parent: instance })
-
-
-      var attr_name = expr.attr,
-          value = tmpl(expr.expr, instance)
-
-      if (value == null) value = ''
-
-      // no change
-      if (expr.value === value) return
-      expr.value = value
-
-
-      // text node
-      if (!attr_name) return dom.nodeValue = value
-
-      // attribute
-      if (!value && expr.bool || /obj|func/.test(typeof value)) remAttr(attr_name)
-
-      // event handler
-      if (typeof value == 'function') {
-        dom[attr_name] = function(e) {
-
-          // cross browser event fix
-          e = e || window.event
-          e.which = e.which || e.charCode || e.keyCode
-          e.target = e.target || e.srcElement
-          e.currentTarget = dom
-
-          // currently looped item
-          e.item = instance.__item || instance
-
-          // prevent default behaviour (by default)
-          if (value.call(instance, e) !== true) {
-            e.preventDefault && e.preventDefault()
-            e.returnValue = false
-          }
-
-          instance.update()
-        }
-
-      // show / hide / if
-      } else if (/^(show|hide|if)$/.test(attr_name)) {
-        remAttr(attr_name)
-        if (attr_name == 'hide') value = !value
-        dom.style.display = value ? '' : 'none'
-
-      // normal attribute
-      } else {
-        if (expr.bool) {
-          dom[attr_name] = value
-          if (!value) return
-          value = attr_name
-        }
-
-        dom.setAttribute(attr_name, value)
-      }
-
-    })
-
-    instance.trigger('updated')
-
-  }
-
-  function parse(root) {
-
-    var named_elements = {},
-        expressions = []
-
-    walk(root, function(dom) {
-
-      var type = dom.nodeType,
-          value = dom.nodeValue
-
-      // text node
-      if (type == 3 && dom.parentNode.tagName != 'STYLE') {
-        addExpr(dom, value)
-
-      // element
-      } else if (type == 1) {
-
-        // loop?
-        value = dom.getAttribute('each')
-
-        if (value) {
-          addExpr(dom, value, { loop: 1 })
-          return false
-        }
-
-        // custom tag?
-        var tag = tag_impl[dom.tagName.toLowerCase()]
-
-        // attributes
-        each(dom.attributes, function(attr) {
-          var name = attr.name,
-              value = attr.value
-
-          // named elements
-          if (/^(name|id)$/.test(name)) named_elements[value] = dom
-
-          // expressions
-          if (!tag) {
-            var bool = name.split('__')[1]
-            addExpr(dom, value, { attr: bool || name, bool: bool })
-            if (bool) {
-              dom.removeAttribute(name)
-              return false
-            }
-          }
-
-        })
-
-        if (tag) addExpr(dom, 0, { tag: tag })
-
-      }
-
-    })
-
-    return { expr: expressions, elem: named_elements }
-
-    function addExpr(dom, value, data) {
-      if (value ? value.indexOf('{') >= 0 : data) {
-        var expr = { dom: dom, expr: value }
-        expressions.push(extend(expr, data || {}))
-      }
-    }
-  }
-
-
-
-  // create new custom tag (component)
-  function createTag(conf) {
-
-    var opts = conf.opts || {},
-        dom = mkdom(conf.tmpl),
-        mountNode = conf.root,
-        parent = conf.parent,
-        ast = parse(dom),
-        tag = { root: mountNode, opts: opts, parent: parent, __item: conf.item },
-        attributes = {}
-
-    // named elements
-    extend(tag, ast.elem)
 
     // attributes
-    each(mountNode.attributes, function(attr) {
-      attributes[attr.name] = attr.value
-    })
+    each(dom.attributes, function(attr) {
+      var name = attr.name,
+          value = attr.value
 
-    function updateOpts() {
-      Object.keys(attributes).map(function(name) {
-        var val = opts[name] = tmpl(attributes[name], parent || tag)
-        if (typeof val == 'object') mountNode.removeAttribute(name)
-      })
-    }
+      // expressions
+      var bool = name.split('__')[1]
+      addExpr(dom, value, { attr: bool || name, bool: bool })
 
-    updateOpts()
-
-    if (!tag.on) {
-      riot.observable(tag)
-      delete tag.off // off method not needed
-    }
-
-    if (conf.fn) conf.fn.call(tag, opts)
-
-
-    tag.update = function(data, _system) {
-
-      /*
-        If loop is defined on the root of the HTML template
-        the original parent is a temporary <div/> by mkdom()
-      */
-      if (parent && dom && !dom.firstChild) {
-        mountNode = parent.root
-        dom = null
+      if (bool) {
+        remAttr(dom, name)
+        return false
       }
 
-      if (_system || doc.body.contains(mountNode)) {
-        extend(tag, data)
-        extend(tag, tag.__item)
-        updateOpts()
-        update(ast.expr, tag)
+    })
 
-        // update parent
-        !_system && tag.__item && parent.update()
-        return true
+  })
+
+}
+function Tag(impl, conf) {
+
+  var self = riot.observable(this),
+      expressions = [],
+      attributes = {},
+      parent = conf.parent,
+      is_loop = conf.loop,
+      root = conf.root,
+      opts = conf.opts,
+      item = conf.item
+
+  // cannot initialize twice on the same root element
+  if (!is_loop && root.riot) return
+  root.riot = 1
+
+  opts = opts || {}
+
+  extend(this, { parent: parent, root: root, opts: opts, children: [] })
+  extend(this, item)
+
+
+  // attributes
+  each(root.attributes, function(attr) {
+    var name = attr.name,
+        val = attr.value
+
+    attributes[name] = val
+
+    // remove dynamic attributes from node
+    if (val.indexOf('{') >= 0) {
+      remAttr(root, name)
+      return false
+    }
+  })
+
+  // options
+  function updateOpts() {
+    Object.keys(attributes).map(function(name) {
+      opts[name] = tmpl(attributes[name], parent || self)
+    })
+  }
+
+  updateOpts()
+
+  // child
+  parent && parent.children.push(this)
+
+  var dom = mkdom(impl.tmpl),
+      loop_dom
+
+  // named elements
+  parseNamedElements(dom, this)
+
+  this.update = function(data, init) {
+    extend(self, data)
+    extend(self, item)
+    self.trigger('update')
+    updateOpts()
+    update(expressions, self, item)
+    self.trigger('updated')
+  }
+
+  this.unmount = function() {
+
+    if (is_loop) {
+      root.removeChild(loop_dom)
+
+    } else {
+      var p = root.parentNode
+      p && p.removeChild(root)
+    }
+
+    // splice from parent.children[]
+    if (parent) {
+      var els = parent.children
+      els.splice(els.indexOf(self), 1)
+    }
+
+    self.trigger('unmount')
+
+    // cleanup
+    parent && parent.off('update', self.update)
+    mounted = false
+  }
+
+  function mount() {
+    while (dom.firstChild) {
+      if (is_loop) {
+        loop_dom = dom.firstChild
+        root.insertBefore(dom.firstChild, conf.before || null) // null needed for IE8
 
       } else {
-        tag.trigger('unmount')
+        root.appendChild(dom.firstChild)
       }
-
     }
 
-    tag.update(0, true)
+    if (!hasParent(root)) self.root = root = parent.root
 
-    // append to root
-    while (dom.firstChild) {
-      if (conf.before) mountNode.insertBefore(dom.firstChild, conf.before)
-      else mountNode.appendChild(dom.firstChild)
-    }
+    self.trigger('mount')
 
+    // one way data flow: propagate updates and unmounts downwards from parent to children
+    parent && parent.on('update', self.update).one('unmount', self.unmount)
 
-    tag.trigger('mount')
-
-    all_tags.push(tag)
-
-    return tag
   }
 
+  // initialize
+  if (impl.fn) impl.fn.call(this, opts)
 
-  function loop(expr, instance) {
+  // layout
+  parseLayout(dom, this, expressions)
 
-    // initialize once
-    if (expr.done) return
-    expr.done = true
+  this.update()
+  mount()
 
+}
+
+
+function setEventHandler(name, handler, dom, tag, item) {
+
+  dom[name] = function(e) {
+
+    // cross browser event fix
+    e = e || window.event
+    e.which = e.which || e.charCode || e.keyCode
+    e.target = e.target || e.srcElement
+    e.currentTarget = dom
+    e.item = item
+
+    // prevent default behaviour (by default)
+    if (handler.call(tag, e) !== true) {
+      e.preventDefault && e.preventDefault()
+      e.returnValue = false
+    }
+
+    tag.update()
+  }
+
+}
+
+function insertTo(root, node, before) {
+  if (root) {
+    root.insertBefore(before, node)
+    root.removeChild(node)
+  }
+}
+
+// item = currently looped item
+function update(expressions, tag, item) {
+
+  each(expressions, function(expr) {
     var dom = expr.dom,
-        prev = dom.previousSibling,
-        root = dom.parentNode,
-        template = dom.outerHTML,
-        val = expr.expr,
-        els = val.split(/\s+in\s+/),
-        rendered = [],
-        checksum,
-        keys
+        attr_name = expr.attr,
+        value = tmpl(expr.expr, tag)
 
+    if (value == null) value = ''
 
-    if (els[1]) {
-      val = '{ ' + els[1]
-      keys = els[0].slice(1).trim().split(/,\s*/)
+    // no change
+    if (expr.value === value) return
+    expr.value = value
+
+    // text node
+    if (!attr_name) return dom.nodeValue = value
+
+    // remove attribute
+    if (!value && expr.bool || /obj|func/.test(typeof value)) remAttr(dom, attr_name)
+
+    // event handler
+    if (typeof value == 'function') {
+      setEventHandler(attr_name, value, dom, tag, item)
+
+    // if- conditional
+    } else if (attr_name == 'if') {
+
+      remAttr(dom, attr_name)
+
+      var stub = expr.stub
+
+      // add to DOM
+      if (value) {
+        stub && insertTo(stub.parentNode, stub, dom)
+
+      // remove from DOM
+      } else {
+        stub = expr.stub = stub || document.createTextNode('')
+        insertTo(dom.parentNode, dom, stub)
+      }
+
+    // show / hide
+    } else if (/^(show|hide)$/.test(attr_name)) {
+      remAttr(dom, attr_name)
+      if (attr_name == 'hide') value = !value
+      dom.style.display = value ? '' : 'none'
+
+    // normal attribute
+    } else {
+      if (expr.bool) {
+        dom[attr_name] = value
+        if (!value) return
+        value = attr_name
+      }
+
+      dom.setAttribute(attr_name, value)
     }
 
-    // clean template code
-    instance.one('mount', function() {
-      var p = dom.parentNode
-      if (p) {
-        root = p
-        root.removeChild(dom)
-      }
-    })
+  })
 
-    function startPos() {
-      return Array.prototype.indexOf.call(root.childNodes, prev) + 1
-    }
-
-    instance.on('updated', function() {
-
-      var items = tmpl(val, instance)
-          is_array = Array.isArray(items)
-
-      if (is_array) items = items.slice(0)
-
-      else {
-
-        if (!items) return // some IE8 issue
-
-        // detect Object changes
-        var testsum = JSON.stringify(items)
-        if (testsum == checksum) return
-        checksum = testsum
-
-        items = Object.keys(items).map(function(key, i) {
-          var item = {}
-          item[keys[0]] = key
-          item[keys[1]] = items[key]
-          return item
-        })
-
-      }
-
-      // remove redundant
-      diff(rendered, items).map(function(item) {
-        var pos = rendered.indexOf(item)
-        root.removeChild(root.childNodes[startPos() + pos])
-        rendered.splice(pos, 1)
-      })
-
-      // add new
-      diff(items, rendered).map(function(item, i) {
-        var pos = items.indexOf(item)
-
-        // string array
-        if (keys && !checksum) {
-          var obj = {}
-          obj[keys[0]] = item
-          obj[keys[1]] = pos
-          item = obj
-        }
-
-        var tag = createTag({
-          before: root.childNodes[startPos() + pos],
-          parent: instance,
-          tmpl: template,
-          item: item,
-          root: root
-        })
-
-        instance.on('update', function() {
-          tag.update(0, true)
-        })
-
-      })
-
-      // assign rendered
-      rendered = items
-
-    })
-
+}
+function each(nodes, fn) {
+  for (var i = 0; i < (nodes || []).length; i++) {
+    if (fn(nodes[i], i) === false) i--
   }
+}
 
-  riot.tag = function(name, tmpl, fn) {
-    fn = fn || noop,
-    tag_impl[name] = [tmpl, fn]
+function remAttr(dom, name) {
+  dom.removeAttribute(name)
+}
+
+function extend(obj, from) {
+  from && Object.keys(from).map(function(key) {
+    obj[key] = from[key]
+  })
+  return obj
+}
+
+function mkdom(template) {
+  var tag_name = template.trim().slice(1, 3).toLowerCase(),
+      root_tag = /td|th/.test(tag_name) ? 'tr' : tag_name == 'tr' ? 'tbody' : 'div'
+      el = document.createElement(root_tag)
+
+  el.stub = true
+  el.innerHTML = template
+  return el
+}
+
+function walk(dom, fn) {
+  dom = fn(dom) === false ? dom.nextSibling : dom.firstChild
+
+  while (dom) {
+    walk(dom, fn)
+    dom = dom.nextSibling
   }
+}
 
-  riot.mountTo = function(node, tagName, opts) {
-    var tag = tag_impl[tagName]
-    return tag && createTag({ tmpl: tag[0], fn: tag[1], root: node, opts: opts })
-  }
+function arrDiff(arr1, arr2) {
+  return arr1.filter(function(el) {
+    return arr2.indexOf(el) < 0
+  })
+}
 
-  riot.mount = function(selector, opts) {
-    if (selector == '*') selector = Object.keys(tag_impl).join(', ')
+// HTMLDocument == IE8 thing
+function hasParent(el) {
+  var p = el.parentNode,
+      doc = window.HTMLDocument
 
-    var instances = []
+  return p && !(doc && p instanceof doc)
+}
 
-    each(doc.querySelectorAll(selector), function(node) {
-      if (node.riot) return
+/*
+ Virtual dom is an array of custom tags on the document.
+ Each tag stores an array of child tags.
+ Updates and unmounts propagate downwards from parent to children.
+*/
 
-      var tagName = node.tagName.toLowerCase(),
-          instance = riot.mountTo(node, tagName, opts)
+var virtual_dom = [],
+    tag_impl = {}
 
-      if (instance) {
-        instances.push(instance)
-        node.riot = 1
-      }
-    })
+riot.tag = function(name, html, fn) {
+  tag_impl[name] = { name: name, tmpl: html, fn: fn }
+}
 
-    return instances
-  }
+var mountTo = riot.mountTo = function(root, tagName, opts) {
+  var impl = tag_impl[tagName], tag
 
-  // update everything
-  riot.update = function() {
-    return all_tags = all_tags.filter(function(tag) {
-      return !!tag.update()
+  if (impl) tag = new Tag(impl, { root: root, opts: opts })
+
+  if (tag) {
+    virtual_dom.push(tag)
+    return tag.on('unmount', function() {
+      virtual_dom.splice(virtual_dom.indexOf(tag), 1)
     })
   }
+}
 
-})(riot, this.top)
+riot.mount = function(selector, opts) {
+  if (selector == '*') selector = Object.keys(tag_impl).join(', ')
+
+  var tags = []
+
+  each(document.querySelectorAll(selector), function(root) {
+
+    var tagName = root.tagName.toLowerCase(),
+        tag = mountTo(root, tagName, opts)
+
+    if (tag) tags.push(tag)
+  })
+
+  return tags
+}
+
+// update everything
+riot.update = function() {
+  virtual_dom.map(function(tag) {
+    tag.update()
+  })
+  return virtual_dom
+}
 
 
 // support CommonJS
@@ -3994,6 +4351,26 @@ else
   this.riot = riot
 
 })();
+
+},{}],"/Users/uzimith/learn/flux-practice/chat/node_modules/riotcontrol/riotcontrol.js":[function(require,module,exports){
+var RiotControl = {
+  _stores: [],
+  addStore: function(store) {
+    this._stores.push(store);
+  }
+};
+
+['on','one','off','trigger'].forEach(function(api){
+  RiotControl[api] = function() {
+    var args = [].slice.call(arguments);
+    this._stores.forEach(function(el){
+      el[api].apply(null, args);
+    });
+  };
+});
+
+if (typeof(module) !== 'undefined') module.exports = RiotControl;
+
 },{}]},{},["./js/app.coffee"])
 
 

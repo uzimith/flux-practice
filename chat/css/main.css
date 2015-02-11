@@ -7043,24 +7043,8 @@ button.close {
   .hidden-print {
     display: none !important; } }
 /* line 3, ../sass/main.sass */
-todoapp, todo {
-  display: block; }
-
-/* line 6, ../sass/main.sass */
-input {
-  margin-left: 5px;
-  margin-right: 5px; }
-
-/* line 9, ../sass/main.sass */
-.row {
-  margin-bottom: 10px; }
-
-/* line 13, ../sass/main.sass */
-.todo label {
-  font-size: 2rem; }
-/* line 16, ../sass/main.sass */
-.todo.completed span {
-  text-decoration: line-through; }
-/* line 18, ../sass/main.sass */
-.todo button {
-  margin-top: 5px; }
+.message {
+  padding: 14px; }
+  /* line 5, ../sass/main.sass */
+  .message .message-date {
+    color: #999; }

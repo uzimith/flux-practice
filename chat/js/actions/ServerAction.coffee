@@ -1,8 +1,8 @@
-RiotControl = require('../riotcontrol')
+RiotControl = require('riotcontrol')
+WebAPIUtils = require('../utils/WebAPIUtils')
 
 ServerAction =
-  receive: (text) ->
-    rawMessages = JSON.parse(localStorage.getItem('messages'))
-    RiotControl.trigger('todo_add', {title: text, done: false})
+  receiveAll: (rawMessages) ->
+    RiotControl.trigger('server_raw_messages', rawMessages)
 
-module.exports = MessageAction
+module.exports = ServerAction

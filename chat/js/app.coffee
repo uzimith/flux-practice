@@ -1,21 +1,21 @@
 riot = require('riot')
-RiotControl = require('./riotcontrol.js')
-
+RiotControl = require('riotcontrol')
+ChatExampleData = require('./ChatExampleData')
+MessageStore = require('./stores/MessageStore.coffee')
+ThreadStore = require('./stores/ThreadStore.coffee')
 
 require('./components/app.tag')
 require('./components/message-panel.tag')
 require('./components/message-editor.tag')
-require('./components/message-list.tag')
 require('./components/thread-panel.tag')
 require('./components/thread.tag')
 
-ChatExampleData = require('./ChatExampleData')
 ChatExampleData.init()
 
+RiotControl.addStore(new ThreadStore())
+RiotControl.addStore(new MessageStore())
 
-MessageStore = require('./stores/MessageStore.coffee')
-ThreadStore = require('./stores/ThreadStore.coffee')
+WebAPIUtils = require('./utils/WebAPIUtils')
+WebAPIUtils.getAllMessages()
 
-RiotControl.addStore(new MessageStore)
-RiotControl.addStore(new ThreadStore)
 riot.mount('*')
