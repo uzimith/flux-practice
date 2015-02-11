@@ -1,4 +1,8 @@
 thread-panel
+  .unread-count
+    span(if='{ unread !== 0 }')
+      | Unread Thread : 
+      span.badge { unread }
   .list-group
     a.list-group-item(each='{ thread, id in threads }' class='{active: id == parent.currentID}' onclick='{ parent.selectThread }')
       h5.list-group-teim-heading { thread.name }
@@ -10,16 +14,19 @@ thread-panel
     ThreadAction = require('../actions/ThreadAction.coffee')
     MessageStore = require('../stores/MessageStore.coffee')
     ThreadStore = require('../stores/ThreadStore.coffee')
+    UnreadThreadStore = require('../stores/UnreadThreadStore.coffee')
 
     @currentID = 0
     @threads = []
+    @unread = 0
 
     @on 'mount', =>
       RiotControl.trigger 'thread_init'
 
-    RiotControl.on 'thread_changed', =>
-      @threads = ThreadStore.getThreads()
+    RiotControl.on 'unread_thread_changed thread_changed', =>
+      @threads = ThreadStore.getAll()
       @currentID = ThreadStore.getCurrentID()
+      @unread = UnreadThreadStore.getCount()
       @update()
 
     @selectThread = (e) =>

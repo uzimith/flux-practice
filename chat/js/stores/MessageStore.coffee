@@ -1,10 +1,10 @@
 riot = require('riot')
 moment = require('moment')
 MessageUtils = require('../utils/MessageUtils.coffee')
+ThreadStore = require('../stores/ThreadStore.coffee')
 
 class MessageStore
 
-  currentID: 0
   messages: []
 
   constructor: (@message) ->
@@ -28,11 +28,11 @@ class MessageStore
     @trigger 'message_changed'
 
   getMessages: =>
-    (message for message, id in @messages when message.threadID is @currentID)
+    (message for message, id in @messages when message.threadID is ThreadStore.getCurrentID())
 
   addMessages: (rawMessages) =>
     for message, id in rawMessages
       if !@messages[id]
-        @messages[id] = MessageUtils.convertRawMessage(message, @currentID)
+        @messages[id] = MessageUtils.convertRawMessage(message, ThreadStore.getCurrentID())
 
 module.exports = new MessageStore

@@ -3,7 +3,7 @@ MessageUtils = require('../utils/MessageUtils.coffee')
 
 class ThreadStore
 
-  currentID: 0
+  currentID: null
   threads: []
 
   constructor: (@message) ->
@@ -18,6 +18,7 @@ class ThreadStore
 
     @on 'thread_select', (currentID)=>
       @currentID = currentID
+      @threads[@currentID].lastMessage.isRead = true
       @emit()
 
   emit: ->
@@ -29,7 +30,7 @@ class ThreadStore
   getCurrentThread: =>
     @threads[@currentID]
 
-  getThreads: =>
+  getAll: =>
     @threads
 
   getAllChrono: =>

@@ -7056,3 +7056,7 @@ button.close {
 /* line 11, ../sass/main.sass */
 .active .thread-date {
   color: #c7ddef; }
+
+/* line 13, ../sass/main.sass */
+.unread-count {
+  height: 20px; }
