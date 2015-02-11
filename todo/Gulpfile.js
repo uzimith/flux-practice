@@ -20,7 +20,7 @@ function bundle() {
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
-    // .pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./js'));
 }

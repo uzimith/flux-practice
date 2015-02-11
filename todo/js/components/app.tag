@@ -2,7 +2,7 @@ app
   header.navbar.navbar-default.navbar-static-top
     .container
       .navbar-header
-        .navbar-brand Todo
+        a.navbar-brand(href="https://github.com/uzimith/flux-practice/") Todo
       nav.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
           li
