@@ -4,7 +4,6 @@ window.Actions = Flummox.Actions
 window.Store = Flummox.Store
 window.Flux = Flummox.Flux
 window.FluxComponent = require('flummox/component')
-window.jade = require('react-jade')
 window._ = require('lodash')
 
 Application = require('./components/Application.coffee')

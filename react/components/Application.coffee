@@ -1,3 +1,5 @@
+jade = require('react-jade')
+
 TodoPanel = require('./TodoPanel.coffee')
 
 class Application extends React.Component
