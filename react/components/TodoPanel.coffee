@@ -1,4 +1,4 @@
-jade = require('react-jade')
+TodoItem = require('./TodoItem.coffee')
 
 class TodoPanel extends React.Component
   constructor: ->

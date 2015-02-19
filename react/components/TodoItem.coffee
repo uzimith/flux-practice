@@ -1,5 +1,3 @@
-jade = require('react-jade')
-
 class TodoItem extends React.Component
   @propTypes:
     todo: React.PropTypes.object.isRequired
