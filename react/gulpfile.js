@@ -8,10 +8,10 @@ var sourcemaps = require('gulp-sourcemaps');
 var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglify');
 
-watchify.args.debug = true
 
 var target = './index.coffee'
 
+watchify.args.debug = true
 var bundler = watchify(browserify(target, watchify.args));
 
 function bundle() {
