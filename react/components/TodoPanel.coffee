@@ -1,4 +1,6 @@
+React = require('react')
 jade = require('react-jade')
+_ = require('lodash')
 
 TodoItem = require('./TodoItem.coffee')
 

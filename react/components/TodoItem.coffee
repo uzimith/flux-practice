@@ -1,4 +1,7 @@
+React = require('react')
+
 jade = require('react-jade')
+_ = require('lodash')
 
 class TodoItem extends React.Component
   @propTypes:

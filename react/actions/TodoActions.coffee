@@ -1,3 +1,5 @@
+Actions = require('flummox').Actions
+
 class TodoActions extends Actions
   createTodo: (text) ->
     id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36)

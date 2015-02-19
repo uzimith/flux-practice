@@ -1,10 +1,5 @@
 window.React = require('react')
-window.Flummox = require('flummox')
-window.Actions = Flummox.Actions
-window.Store = Flummox.Store
-window.Flux = Flummox.Flux
-window.FluxComponent = require('flummox/component')
-window._ = require('lodash')
+Flux = require('flummox').Flux
 
 Application = require('./components/Application.coffee')
 TodoActions = require('./actions/TodoActions.coffee')

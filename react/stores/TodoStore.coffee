@@ -1,3 +1,6 @@
+window.React = require('react')
+Store = require('flummox').Store
+
 class TodoStore extends Store
   constructor: (flux) ->
     super

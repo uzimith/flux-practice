@@ -1,6 +1,10 @@
+React = require('react')
 jade = require('react-jade')
+_ = require('lodash')
 
 TodoPanel = require('./TodoPanel.coffee')
+FluxComponent = require('flummox/component')
+
 
 class Application extends React.Component
   render: =>
